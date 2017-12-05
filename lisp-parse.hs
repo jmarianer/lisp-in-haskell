@@ -4,7 +4,7 @@ import Data.List
 -- Data type
 data LispObject = Atom String | List [LispObject]
 
--- Outout
+-- Output
 instance Show LispObject where
   show (Atom a) = a
   show (List l) = "(" ++ (intercalate " " (map show l)) ++ ")"
