@@ -34,4 +34,7 @@ parseInput :: String -> LispObject
 parseInput input = l
   where (l, _) = parseLispObject input
 testInput = "(first (list 1 (+ 2 3) 9))"
-main = putStrLn $ showIndented $ parseInput testInput
+main = do
+  putStrLn ("Simple show: " ++ show object)
+  putStrLn ("Indented show:\n" ++ showIndented' "  " object)
+  where object = parseInput testInput
