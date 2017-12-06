@@ -29,12 +29,13 @@ parseList (c:cs) = case c of
           in  (firstElement:restOfList, restOfInput)
 parseList "" = ([], "")
 
--- Very simple test
-parseInput :: String -> LispObject
-parseInput input = l
-  where (l, _) = parseLispObject input
-testInput = "(first (list 1 (+ 2 3) 9))"
+-- REPL without the E :-)
+handleLine :: String -> String
+handleLine inputLine =
+    "Simple show: " ++ show object ++ "\n" ++
+    "Indented show:\n" ++ showIndented' "  " object
+  where (object, _) = parseLispObject inputLine
+
 main = do
-  putStrLn ("Simple show: " ++ show object)
-  putStrLn ("Indented show:\n" ++ showIndented' "  " object)
-  where object = parseInput testInput
+  input <- getContents
+  putStr (concatMap handleLine (lines input))
