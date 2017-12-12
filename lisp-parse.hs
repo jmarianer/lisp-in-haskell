@@ -1,3 +1,4 @@
+import System.Console.Haskeline
 import Data.Char
 import Data.List
 import qualified Data.Map as Map
@@ -65,15 +66,23 @@ eval env (List [Atom "let", List initializers, expression]) =
   in eval env' expression
 eval env (List (function:params)) = (fromFunction (eval env function)) (map (eval env) params)
 
--- REPL without the E :-)
+-- Simple REPL
 handleLine :: String -> String
 handleLine inputLine =
     "Simple show: " ++ show object ++ "\n" ++
     "Indented show:\n" ++ showIndented' "  " object ++
-    "Evaluated: " ++ show (eval defaultEnv object) ++ "\n\n"
+    "Evaluated: " ++ show (eval defaultEnv object) ++ "\n"
   where (object, _) = parseLispObject inputLine
 
 
-main = do
-  input <- getContents
-  putStr (concatMap handleLine (lines input))
+main :: IO ()    -- Copied from Haskeline documentation
+main = runInputT defaultSettings {historyFile = Just ".lisp_history"} loop
+ where
+   loop :: InputT IO ()
+   loop = do
+     minput <- getInputLine "> "
+     case minput of
+       Nothing -> return ()
+       Just input -> do outputStrLn $ handleLine input
+                        loop
+
